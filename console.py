@@ -133,11 +133,8 @@ class HBNBCommand(cmd.Cmd):
 
             key, value = arg.split('=')
             if value.startswith('"') and value.endswith('"'):
-                # Remove leading and trailing quotes
                 value = value[1:-1]
-                # Replace underscore with spaces
                 value = value.replace('_', ' ')
-                # Replace escaped double quotes with double quotes
                 value = value.replace('\\"', '"')
                 params[key] = value
             elif '.' in value:
@@ -152,7 +149,7 @@ class HBNBCommand(cmd.Cmd):
                     continue
 
         new_instance = HBNBCommand.classes[class_name](**params)
-        storage.save()
+        storage.new(new_instance)
         print(new_instance.id)
 
     def help_create(self):
