@@ -4,7 +4,7 @@ This module defines the entrypoint for a
 simple Flask application.
 """
 
-from flask import Flask
+from flask import Flask, abort
 
 app = Flask(__name__)
 
@@ -62,6 +62,28 @@ def python(text):
     """
     text = text.replace("_", " ")
     return "Python {}".format(text)
+
+
+@app.route("/number/<int:n>", strict_slashes=False)
+def number(n):
+    """
+    Returns a string message indicating
+    whether a given number is an integer or not.
+
+    Args:
+        n (int): An integer.
+
+    Returns:
+        str: A string message indicating whether n is an integer or not.
+
+    Raises:
+        404: If n is not an integer.
+
+    """
+    if isinstance(n, int):
+        return "{} is a number".format(n)
+    else:
+        return abort(404)
 
 
 if __name__ == '__main__':
