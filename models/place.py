@@ -4,10 +4,11 @@ Place Module for HBNB project
 """
 from sqlalchemy import Column, ForeignKey, String, Integer, Float
 
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
+from sqlalchemy.orm import relationship
 
 
-class Place(BaseModel):
+class Place(BaseModel, Base):
     """
     Place class inherits from BaseModel and defines
     attributes for a place object

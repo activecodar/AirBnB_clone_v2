@@ -68,20 +68,15 @@ class DBStorage:
             A dictionary with keys in the format
             '<class-name>.<object-id>' and values as the corresponding objects.
         """
-        obj_dict = {}
-
         if cls is None:
-            classes = [User, State, City, Amenity, Place, Review]
+            objs = self.__session.query(State).all()
+            for model in [City, User, Place, Review, Amenity]:
+                objs.extend(self.__session.query(model).all())
         else:
-            classes = [cls]
-
-        for class_ in classes:
-            objs = self.__session.query(class_).all()
-            for obj in objs:
-                key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                obj_dict[key] = obj
-
-        return obj_dict
+            if type(cls) == str:
+                cls = eval(cls)
+            objs = self.__session.query(cls)
+        return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
 
     def new(self, obj):
         """
@@ -116,3 +111,9 @@ class DBStorage:
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """
+        Close the session
+        """
+        self.__session.close()
